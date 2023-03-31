@@ -201,24 +201,50 @@ def custom_ang_round(b):
         b = b % 360 + 360
     return b
 
+# Visited nodes threshold
+def visited_nodes_threshold_check(x, y, theta):
+    if visited_nodes[int(x)][int(y)][int(theta)]:
+        return False
+    elif visited_nodes[int((x + 2))][int(y)][int(theta)]:
+        return False
+    elif visited_nodes[int((x - 2))][int(y)][int(theta)]:
+        return False
+    elif visited_nodes[int((x))][int((y + 2))][int(theta)]:
+        return False
+    elif visited_nodes[int((x))][int((y - 2))][int(theta)]:
+        return False
+    elif visited_nodes[int((x + 2))][int((y + 2))][int(theta)]:
+        return False
+    elif visited_nodes[int((x - 2))][int((y + 2))][int(theta)]:
+        return False
+    elif visited_nodes[int((x + 2))][int((y - 2))][int(theta)]:
+        return False
+    elif visited_nodes[int((x - 2))][int((y - 2))][int(theta)]:
+        return False
+    else:
+        return True
+
 # Check new node based on action set and making decisions to adding it to visited nodes list 
 def check_new_node(x, y, theta, total_cost, cost_to_go, cost_to_come,interim_points):
-    x = np.round(x,2)
-    y = np.round(y,2)
+    x = np.round(x,1)
+    y = np.round(y,1)
+    # x = int(x)
+    # y = int(y)
     theta = custom_ang_round(np.round(theta,2))
-    if visited_nodes[int(x)][int(y)][int(theta)] == 0:
-        if (x, y, theta) in explored_nodes:
-            if explored_nodes[(x, y, theta)][0] >= total_cost:
-                explored_nodes[(x, y, theta)] = total_cost, cost_to_go, cost_to_come
-                node_records[(x, y, theta)] = (pop[0][0], pop[0][1], pop[0][2]), interim_points
-                visited_nodes_track.add((x, y, theta))
-                return None
-            else:
-                return None
-        explored_nodes[(x, y, theta)] = total_cost, cost_to_go, cost_to_come
-        node_records[(x, y, theta)] = (pop[0][0], pop[0][1], pop[0][2]), interim_points
-        explored_mapping.append((x, y))
-        visited_nodes_track.add((x, y, theta))
+    if visited_nodes_threshold_check(x, y, theta):
+        if visited_nodes[int(x)][int(y)][int(theta)] == 0:
+            if (x, y, theta) in explored_nodes:
+                if explored_nodes[(x, y, theta)][0] >= total_cost:
+                    explored_nodes[(x, y, theta)] = total_cost, cost_to_go, cost_to_come
+                    node_records[(x, y, theta)] = (pop[0][0], pop[0][1], pop[0][2]), interim_points
+                    visited_nodes_track.add((x, y, theta))
+                    return None
+                else:
+                    return None
+            explored_nodes[(x, y, theta)] = total_cost, cost_to_go, cost_to_come
+            node_records[(x, y, theta)] = (pop[0][0], pop[0][1], pop[0][2]), interim_points
+            explored_mapping.append((x, y))
+            visited_nodes_track.add((x, y, theta))
 
 # Non-holonomic constraint function
 def action(RPM_L,RPM_R,pop):
@@ -228,6 +254,8 @@ def action(RPM_L,RPM_R,pop):
     L = 0.178
     x = pop[0][0]
     y = pop[0][1]
+    # x = int(pop[0][0])
+    # y = int(pop[0][1])
     theta = pop[0][2]
     interim_points = OrderedSet()
 
@@ -241,8 +269,10 @@ def action(RPM_L,RPM_R,pop):
         theta_new = theta_new + (R/L)*(RPM_R-RPM_L)*dt
         x_new = x_new + (R/2)*(RPM_L+RPM_R)*np.cos(np.deg2rad(theta_new))
         y_new = y_new + (R/2)*(RPM_L+RPM_R)*np.sin(np.deg2rad(theta_new))
-        x = np.round(x,2)
-        y = np.round(y,2)
+        x = np.round(x,1)
+        y = np.round(y,1)
+        # x_new = int(x_new)
+        # y_new = int(y_new)
         temp_obs = check_obstacles(x_new,y_new)
         if not temp_obs:
             break
@@ -318,13 +348,17 @@ obstacle_buffer = 3
 obstacles_var = obstacles(obstacle_buffer)
 py_obstacles = obstacles(obstacle_buffer,0)
 
-x_s = np.round(11,2)
-y_s = np.round(11,2)
+# x_s = np.round(11,2)
+# y_s = np.round(11,2)
+x_s = int(11)
+y_s = int(11)
 theta_s = 69
 init_pos = (x_s,y_s,theta_s)
 
-x_f = np.round(590,2)
-y_f = np.round(240,2)
+# x_f = np.round(590,2)
+# y_f = np.round(240,2)
+x_f = int(590)
+y_f = int(240)
 goal_pos = (x_f,y_f)
 
 RPM1 = 50
