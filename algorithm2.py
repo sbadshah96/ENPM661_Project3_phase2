@@ -25,7 +25,7 @@ def calculate_new_c(m, c, buffer_val):
        return None
 
 # Define new obstacles based on user input buffer
-def obstacles(obstacle_buffer, robot_size=1.05):
+def obstacles(obstacle_buffer, robot_size=0.105):
     obstacles = []
 
     buffer_val = obstacle_buffer + robot_size
@@ -214,11 +214,21 @@ def check_obstacles(x, y):
 #     else:
 #         return True
 
+# Custom rounding off function for angle
+def custom_ang_round(b):
+    if b >= 360:
+        b = b % 360
+    elif -360 < b < 0:
+        b += 360
+    elif b <= -360:
+        b = b % 360 + 360
+    return b
+
 # Check new node based on action set and making decisions to adding it to visited nodes list 
 def check_new_node(x, y, theta, total_cost, cost_to_go, cost_to_come):
     x = np.round(x,2)
     y = np.round(y,2)
-    theta = np.round(theta,2)
+    theta = custom_ang_round(np.round(theta,2))
     if visited_nodes[int(x)][ int(y)][int(theta)] == 0:
         if (x, y, theta) in explored_nodes:
             if explored_nodes[(x, y, theta)][0] >= total_cost:
@@ -331,8 +341,8 @@ x_f = np.round(590,2)
 y_f = np.round(240,2)
 goal_pos = (x_f,y_f)
 
-RPM1 = 70
-RPM2 = 20
+RPM1 = 50
+RPM2 = 100
 
 # Global variable initialization 
 explored_nodes = heapdict.heapdict()
