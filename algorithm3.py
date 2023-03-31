@@ -191,29 +191,6 @@ def check_obstacles(x, y):
     else:
         return True
 
-# # Visited nodes threshold
-# def visited_nodes_threshold_check(x, y, theta):
-#     if visited_nodes[int(2 * x)][int(2 * y)][int(theta / 30)]:
-#         return False
-#     elif visited_nodes[int(2 * (x + 0.5))][int(2 * y)][int(theta / 30)]:
-#         return False
-#     elif visited_nodes[int(2 * (x - 0.5))][int(2 * y)][int(theta / 30)]:
-#         return False
-#     elif visited_nodes[int(2 * (x))][int(2 * (y + 0.5))][int(theta / 30)]:
-#         return False
-#     elif visited_nodes[int(2 * (x))][int(2 * (y - 0.5))][int(theta / 30)]:
-#         return False
-#     elif visited_nodes[int(2 * (x + 0.5))][int(2 * (y + 0.5))][int(theta / 30)]:
-#         return False
-#     elif visited_nodes[int(2 * (x - 0.5))][int(2 * (y + 0.5))][int(theta / 30)]:
-#         return False
-#     elif visited_nodes[int(2 * (x + 0.5))][int(2 * (y - 0.5))][int(theta / 30)]:
-#         return False
-#     elif visited_nodes[int(2 * (x - 0.5))][int(2 * (y - 0.5))][int(theta / 30)]:
-#         return False
-#     else:
-#         return True
-
 # Custom rounding off function for angle
 def custom_ang_round(b):
     if b >= 360:
@@ -225,7 +202,7 @@ def custom_ang_round(b):
     return b
 
 # Check new node based on action set and making decisions to adding it to visited nodes list 
-def check_new_node(x, y, theta, total_cost, cost_to_go, cost_to_come):
+def check_new_node(x, y, theta, total_cost, cost_to_go, cost_to_come,interim_points):
     x = np.round(x,2)
     y = np.round(y,2)
     theta = custom_ang_round(np.round(theta,2))
@@ -233,13 +210,13 @@ def check_new_node(x, y, theta, total_cost, cost_to_go, cost_to_come):
         if (x, y, theta) in explored_nodes:
             if explored_nodes[(x, y, theta)][0] >= total_cost:
                 explored_nodes[(x, y, theta)] = total_cost, cost_to_go, cost_to_come
-                node_records[(x, y, theta)] = (pop[0][0], pop[0][1], pop[0][2])
+                node_records[(x, y, theta)] = (pop[0][0], pop[0][1], pop[0][2]), interim_points
                 visited_nodes_track.add((x, y, theta))
                 return None
             else:
                 return None
         explored_nodes[(x, y, theta)] = total_cost, cost_to_go, cost_to_come
-        node_records[(x, y, theta)] = (pop[0][0], pop[0][1], pop[0][2])
+        node_records[(x, y, theta)] = (pop[0][0], pop[0][1], pop[0][2]), interim_points
         explored_mapping.append((x, y))
         visited_nodes_track.add((x, y, theta))
 
@@ -252,15 +229,18 @@ def action(RPM_L,RPM_R,pop):
     x = pop[0][0]
     y = pop[0][1]
     theta = pop[0][2]
+    interim_points = OrderedSet()
 
     x_new = x
     y_new = y
     theta_new = theta
+    interim_points.add((to_pygame((x_new,y_new),250)))
 
     while t < 1:
         theta_new = theta_new + (r/L)*(RPM_R-RPM_L)*dt
         x_new = x_new + (r/2)*(RPM_L+RPM_R)*np.cos(np.deg2rad(theta_new))
         y_new = y_new + (r/2)*(RPM_L+RPM_R)*np.sin(np.deg2rad(theta_new))
+        interim_points.add((to_pygame((x_new,y_new),250)))
         t = t + dt
     obs = check_obstacles(x_new, y_new)
     
@@ -268,15 +248,15 @@ def action(RPM_L,RPM_R,pop):
         new_cost_to_go = np.sqrt(((x_new - x_f) ** 2) + ((y_new - y_f) ** 2))
         new_cost_to_come = np.sqrt(((x_new - x_s) ** 2) + ((y_new - y_s) ** 2))
         new_total_cost = new_cost_to_go + new_cost_to_come
-        check_new_node(x_new, y_new, theta_new, new_total_cost, new_cost_to_go, new_cost_to_come)
+        check_new_node(x_new, y_new, theta_new, new_total_cost, new_cost_to_go, new_cost_to_come,interim_points)
 
 # Backtrack to find the optimal path
 def backtracking(x, y, theta):
     backtrack.append((x, y, theta))
-    key = node_records[(x, y, theta)]
+    key = node_records[(x, y, theta)][0]
     backtrack.append(key)
     while key != init_pos:
-        key = node_records[key]
+        key = node_records[key][0]
         backtrack.append(key)
     return backtrack[::-1]
 
@@ -368,20 +348,8 @@ if __name__ == '__main__':
         explored_mapping.append((x_s, y_s))
         while len(explored_nodes):
             pop = explored_nodes.popitem()
-            # print('explored nodes: ',list(explored_nodes.keys()))
-            # print('Visited Nodes: ',visited_nodes_track)
-            # print('explored nodes: ',list(explored_nodes.values()))
-            # print()
-            # print('pop: ',pop)
-            # pop[0][0] = np.round(pop[0][0],2)
-            # pop[0][1] = np.round(pop[0][0],2)
-            # pop[0][2] = np.round(pop[0][0],2)
             index += 1
             if not (x_f - 3 < pop[0][0] < x_f + 3 and y_f - 3 < pop[0][1] < y_f + 3):
-                # if (np.round(pop[0][0],2),np.round(pop[0][1],2),np.round(pop[0][2],2)) not in visited_nodes_track:
-                #     visited_nodes_track.add((np.round(pop[0][0],2),np.round(pop[0][1],2),np.round(pop[0][2],2)))
-                # if (int(pop[0][0]),int(pop[0][1]),int(pop[0][2])) not in visited_nodes_track:
-                #     visited_nodes_track.add((int(pop[0][0]),int(pop[0][1]),int(pop[0][2])))
                 if visited_nodes[int(pop[0][0])][int(pop[0][1])][int(pop[0][2])] == 0:
                     visited_nodes[int(pop[0][0])][int(pop[0][1])][int(pop[0][2])] = 1
 
