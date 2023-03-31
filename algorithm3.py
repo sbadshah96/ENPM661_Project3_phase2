@@ -206,7 +206,7 @@ def check_new_node(x, y, theta, total_cost, cost_to_go, cost_to_come,interim_poi
     x = np.round(x,2)
     y = np.round(y,2)
     theta = custom_ang_round(np.round(theta,2))
-    if visited_nodes[int(x)][ int(y)][int(theta)] == 0:
+    if visited_nodes[int(x)][int(y)][int(theta)] == 0:
         if (x, y, theta) in explored_nodes:
             if explored_nodes[(x, y, theta)][0] >= total_cost:
                 explored_nodes[(x, y, theta)] = total_cost, cost_to_go, cost_to_come
@@ -224,7 +224,7 @@ def check_new_node(x, y, theta, total_cost, cost_to_go, cost_to_come,interim_poi
 def action(RPM_L,RPM_R,pop):
     t = 0
     dt = 0.1
-    r = 0.105
+    R = 0.033
     L = 0.178
     x = pop[0][0]
     y = pop[0][1]
@@ -234,12 +234,18 @@ def action(RPM_L,RPM_R,pop):
     x_new = x
     y_new = y
     theta_new = theta
+    
     interim_points.add((to_pygame((x_new,y_new),250)))
 
     while t < 1:
-        theta_new = theta_new + (r/L)*(RPM_R-RPM_L)*dt
-        x_new = x_new + (r/2)*(RPM_L+RPM_R)*np.cos(np.deg2rad(theta_new))
-        y_new = y_new + (r/2)*(RPM_L+RPM_R)*np.sin(np.deg2rad(theta_new))
+        theta_new = theta_new + (R/L)*(RPM_R-RPM_L)*dt
+        x_new = x_new + (R/2)*(RPM_L+RPM_R)*np.cos(np.deg2rad(theta_new))
+        y_new = y_new + (R/2)*(RPM_L+RPM_R)*np.sin(np.deg2rad(theta_new))
+        x = np.round(x,2)
+        y = np.round(y,2)
+        temp_obs = check_obstacles(x_new,y_new)
+        if not temp_obs:
+            break
         interim_points.add((to_pygame((x_new,y_new),250)))
         t = t + dt
     obs = check_obstacles(x_new, y_new)
@@ -321,8 +327,8 @@ x_f = np.round(590,2)
 y_f = np.round(240,2)
 goal_pos = (x_f,y_f)
 
-RPM1 = 40
-RPM2 = 69
+RPM1 = 50
+RPM2 = 100
 
 # Global variable initialization 
 explored_nodes = heapdict.heapdict()
