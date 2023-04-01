@@ -205,6 +205,26 @@ def custom_ang_round(b):
 def visited_nodes_threshold_check(x, y, theta):
     if visited_nodes[int(x)][int(y)][int(theta)]:
         return False
+    elif visited_nodes[int((x + 1))][int(y)][int(theta)]:
+        return False
+    elif visited_nodes[int((x - 1))][int(y)][int(theta)]:
+        return False
+    elif visited_nodes[int((x))][int((y + 1))][int(theta)]:
+        return False
+    elif visited_nodes[int((x))][int((y - 1))][int(theta)]:
+        return False
+    elif visited_nodes[int((x + 1))][int((y + 1))][int(theta)]:
+        return False
+    elif visited_nodes[int((x - 1))][int((y + 1))][int(theta)]:
+        return False
+    elif visited_nodes[int((x + 1))][int((y - 1))][int(theta)]:
+        return False
+    elif visited_nodes[int((x - 1))][int((y - 1))][int(theta)]:
+        return False
+    
+
+    if visited_nodes[int(x)][int(y)][int(theta)]:
+        return False
     elif visited_nodes[int((x + 2))][int(y)][int(theta)]:
         return False
     elif visited_nodes[int((x - 2))][int(y)][int(theta)]:
@@ -221,6 +241,60 @@ def visited_nodes_threshold_check(x, y, theta):
         return False
     elif visited_nodes[int((x - 2))][int((y - 2))][int(theta)]:
         return False
+
+
+    elif visited_nodes[int((x + 3))][int(y)][int(theta)]:
+        return False
+    elif visited_nodes[int((x - 3))][int(y)][int(theta)]:
+        return False
+    elif visited_nodes[int((x))][int((y + 3))][int(theta)]:
+        return False
+    elif visited_nodes[int((x))][int((y - 3))][int(theta)]:
+        return False
+    elif visited_nodes[int((x + 3))][int((y + 3))][int(theta)]:
+        return False
+    elif visited_nodes[int((x - 3))][int((y + 3))][int(theta)]:
+        return False
+    elif visited_nodes[int((x + 3))][int((y - 3))][int(theta)]:
+        return False
+    elif visited_nodes[int((x - 3))][int((y - 3))][int(theta)]:
+        return False
+    
+
+    # elif visited_nodes[int((x + 4))][int(y)][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x - 4))][int(y)][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x))][int((y + 4))][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x))][int((y - 4))][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x + 4))][int((y + 4))][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x - 4))][int((y + 4))][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x + 4))][int((y - 4))][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x - 4))][int((y - 4))][int(theta)]:
+    #     return False
+
+
+    # elif visited_nodes[int((x + 5))][int(y)][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x - 5))][int(y)][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x))][int((y + 5))][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x))][int((y - 5))][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x + 5))][int((y + 5))][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x - 5))][int((y + 5))][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x + 5))][int((y - 5))][int(theta)]:
+    #     return False
+    # elif visited_nodes[int((x - 5))][int((y - 5))][int(theta)]:
+    #     return False
     else:
         return True
 
