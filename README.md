@@ -28,7 +28,7 @@ Run below command in the terminal:
 
 To run the code, open any editor (preferably VSC) and run the script.
 
-***Testing part01***
+***Testing part01***\
 To test the A* algorithm in 2D.
 1. Run the python script and provide obstacle buffer value (Example: 2)
 2. Provide initial x, y and theta values with spaces (Example: 10 95 5)
@@ -37,7 +37,7 @@ To test the A* algorithm in 2D.
 5. Search algorithm will provide a backtrack path along with time value it took to search the goal node.
 6. The animation video of tracking will be generated and saved as an mp4 file.
 
-***Testing part02***
+***Testing part02***\
 To test the A* algorithm in 3D.
 1. Change directory to "catkin_ws".
 ```
