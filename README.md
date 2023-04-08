@@ -44,7 +44,7 @@ To test the A* algorithm in 2D.
 6. The animation video of tracking will be generated and saved as an mp4 file.
 
 ***Testing part02***\
-To test the A* algorithm in 3D, place the a_star package inside your catkin_ws (Catkin Workspace).
+To test the A* algorithm in 3D, place the a_star package inside your catkin_ws (Catkin Workspace). Turtlebot packages will be required to run the Gazebo Simulation.
 1. Change directory to "catkin_ws".
 ```
 cd catkin_ws
