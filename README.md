@@ -5,7 +5,7 @@ Aaqib Barodawala (119348710 - abarodaw)
 
 This python3 script performs A* search and planning algorithm on a 600cmx200cm canvas with obstacles
 
-The scripts includes following libraries:
+The scripts includes following libraries:\
 -math\
 -heapdict\
 -numpy\
