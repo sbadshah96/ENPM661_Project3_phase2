@@ -62,5 +62,5 @@ roslaunch a_star a_star.launch
 https://github.com/sbadshah96/ENPM661_Project3_phase2.git
 
 ***Animation link***\
-https://drive.google.com/file/d/1NewaH_FyrsMTiX6cgzDbv95jZTngOdvn/view?usp=sharing
+https://drive.google.com/drive/folders/1Yh78Lbj70zhKNGaGq0fEG5ds_OGrV9Wo?usp=share_link
 
