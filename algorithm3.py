@@ -223,8 +223,6 @@ def visited_nodes_threshold_check(x, y, theta):
         return False
     
 
-    if visited_nodes[int(x)][int(y)][int(theta)]:
-        return False
     elif visited_nodes[int((x + 2))][int(y)][int(theta)]:
         return False
     elif visited_nodes[int((x - 2))][int(y)][int(theta)]:
@@ -323,7 +321,7 @@ def check_new_node(x, y, theta, total_cost, cost_to_go, cost_to_come,interim_poi
 # Non-holonomic constraint function
 def action(RPM_L,RPM_R,pop):
     t = 0
-    dt = 0.1
+    dt = 1
     R = 0.033
     L = 0.178
     x = pop[0][0]
@@ -339,12 +337,20 @@ def action(RPM_L,RPM_R,pop):
     
     interim_points.add((to_pygame((x_new,y_new),250)))
 
-    while t < 1:
-        theta_new = theta_new + (R/L)*(RPM_R-RPM_L)*dt
-        x_new = x_new + (R/2)*(RPM_L+RPM_R)*np.cos(np.deg2rad(theta_new))
-        y_new = y_new + (R/2)*(RPM_L+RPM_R)*np.sin(np.deg2rad(theta_new))
-        x = np.round(x,1)
-        y = np.round(y,1)
+    while t < 10:
+        theta_new = theta_new + (R/(10*L))*(RPM_R-RPM_L)*dt
+        # if index==3000:
+        #     print('d_theta:',(R/L)*(RPM_R-RPM_L)*dt)
+        
+        x_new = x_new + (R/2)*(RPM_L+RPM_R)*np.cos(np.deg2rad(theta_new))*dt
+        y_new = y_new + (R/2)*(RPM_L+RPM_R)*np.sin(np.deg2rad(theta_new))*dt
+
+        # if index%14000==0:
+        #     print('Theta_new: ',theta_new)
+        #     print('X_new: ',x_new)
+        #     print('Y_new: ',y_new)
+        # x = np.round(x,1)
+        # y = np.round(y,1)
         # x_new = int(x_new)
         # y_new = int(y_new)
         temp_obs = check_obstacles(x_new,y_new)
@@ -431,8 +437,8 @@ init_pos = (x_s,y_s,theta_s)
 
 # x_f = np.round(590,2)
 # y_f = np.round(240,2)
-x_f = int(590)
-y_f = int(240)
+x_f = int(550)
+y_f = int(120)
 goal_pos = (x_f,y_f)
 
 RPM1 = 50
@@ -504,3 +510,101 @@ if __name__ == '__main__':
         print('Cannot A-star, starting node in an obstacle space.')
     elif not check_obstacles(x_f, y_f):
         print('Cannot A-star, goal node in an obstacle space.')
+
+
+####Pygame Visualization####
+pygame.init()
+video = vidmaker.Video("a_star_shreejay_aaqib.mp4", late_export=True)
+size = [600, 250]
+d = obstacle_buffer
+monitor = pygame.display.set_mode(size)
+pygame.display.set_caption("Arena")
+
+Done = False
+clock = pygame.time.Clock()
+while not Done:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            Done = True
+    monitor.fill("black")
+
+    # Walls
+    pygame.draw.rect(monitor, "red", [0, 0, d, 250], 0)
+    pygame.draw.rect(monitor, "red", [0, 0, 600, d], 0)
+    pygame.draw.rect(monitor, "red", [0, 250-d, 600, d], 0)
+    pygame.draw.rect(monitor, "red", [600-d, 0, d, 250], 0)
+
+    # Rectangles
+    x, y = rec_pygame([100-d, 0], 250, 100+d)
+    pygame.draw.rect(monitor, "red", [x, y, 50+2*d, 100+d], 0)
+
+    x, y = rec_pygame([100-d, 150-d], 250, 100+d)
+    pygame.draw.rect(monitor, "red", [x, y, 50+2*d, 100+d], 0)
+
+    x, y = rec_pygame([100, 0], 250, 100)
+    pygame.draw.rect(monitor, "orange", [x, y, 50, 100], 0)
+
+    x, y = rec_pygame([100, 150], 250, 100)
+    pygame.draw.rect(monitor, "orange", [x, y, 50, 100], 0)
+
+    # Triangle
+    T1 = find_intersection(-1,0,py_obstacles[12][1],py_obstacles[13][1],0,1)
+    T2 = find_intersection(py_obstacles[13][0],py_obstacles[14][0],py_obstacles[13][1],py_obstacles[14][1],1,1)
+    T3 = find_intersection(py_obstacles[14][0],py_obstacles[15][0],py_obstacles[14][1],py_obstacles[15][1], 1, 1)
+    T4 = find_intersection(py_obstacles[15][0],0,py_obstacles[15][1],py_obstacles[16][1], 1, 1)
+    T5 = find_intersection(-1,py_obstacles[16][0],py_obstacles[12][1],py_obstacles[16][1], 0, 1)
+
+    a, b = to_pygame(T1, 250)
+    c, d = to_pygame(T2, 250)
+    e, f = to_pygame(T3, 250)
+    g, h = to_pygame(T4, 250)
+    i, j = to_pygame(T5, 250)
+    pygame.draw.polygon(monitor, "red", ([a, b], [c, d], [e, f], [g, h], [i, j]), 0)
+
+    a, b = to_pygame([460, 25], 250)
+    c, d = to_pygame([460, 225], 250)
+    e, f = to_pygame([510, 125], 250)
+    pygame.draw.polygon(monitor, "orange", [[a, b], [c, d], [e, f]], 0)
+
+    # Hexagon
+    H1 = find_intersection(py_obstacles[6][0], -1, py_obstacles[6][1], py_obstacles[7][1], 1, 0)
+    H2 = find_intersection(-1, py_obstacles[8][0], py_obstacles[7][1], py_obstacles[8][1], 0, 1)
+    H3 = find_intersection(py_obstacles[8][0], py_obstacles[9][0], py_obstacles[8][1], py_obstacles[9][1], 1, 1)
+    H4 = find_intersection(py_obstacles[9][0], -1, py_obstacles[9][1], py_obstacles[10][1], 1, 0)
+    H5 = find_intersection(-1, py_obstacles[11][0], py_obstacles[10][1], py_obstacles[11][1], 0, 1)
+    H6 = find_intersection(py_obstacles[11][0], py_obstacles[6][0],py_obstacles[11][1], py_obstacles[6][1], 1, 1)
+
+    a, b = to_pygame(H1, 250)
+    c, d = to_pygame(H2, 250)
+    e, f = to_pygame(H3, 250)
+    g, h = to_pygame(H4, 250)
+    i, j = to_pygame(H5, 250)
+    k, l = to_pygame(H6, 250)
+    pygame.draw.polygon(monitor, "red", [[a, b], [c, d], [e, f], [g, h], [i, j], [k, l]], 0)
+
+    pygame.draw.polygon(monitor, "orange", ((235.05, 87.5), (300, 50),(364.95, 87.5), (364.95, 162.5), (300, 200),
+                                            (235.05, 162.5)))
+
+    # Simulation of visited nodes and Backtracking
+    for l in range(len(visited_nodes_track) - 2):
+        m = visited_nodes_track[l]
+        n = node_records[m][0]
+        m = to_pygame(m, 250)
+        n = to_pygame(n, 250)
+        video.update(pygame.surfarray.pixels3d(monitor).swapaxes(0, 1), inverted=False)
+        pygame.draw.lines(monitor, "white", False, node_records[visited_nodes_track[l]][1], width=1)
+        # arrow(monitor, "white", (0, 0, 0),[m[0], m[1]], [n[0], n[1]], 0.5)
+        pygame.display.flip()
+        clock.tick(50000)
+    for i in the_path:
+        pygame.draw.circle(monitor, (0, 0, 255), to_pygame(i, 250), 5)
+        video.update(pygame.surfarray.pixels3d(monitor).swapaxes(0, 1), inverted=False)
+        pygame.display.flip()
+        clock.tick(20)
+
+    pygame.display.flip()
+    pygame.time.wait(10000)
+    Done = True
+
+pygame.quit()
+video.export(verbose=True)
