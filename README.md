@@ -52,8 +52,9 @@ catkin_make
 roslaunch a_star a_star.launch
 ```
 
-***git link***
+***git link***\
 https://github.com/sbadshah96/ENPM661_Project3_phase2.git
 
-***Animation link***
+***Animation link***\
+https://drive.google.com/file/d/1NewaH_FyrsMTiX6cgzDbv95jZTngOdvn/view?usp=sharing
 
