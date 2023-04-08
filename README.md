@@ -39,12 +39,18 @@ To test the A* algorithm in 2D.
 
 ***Testing part02***
 To test the A* algorithm in 3D.
-1. 
-2. 
-3. 
-4. 
-5. 
-6. 
+1. Change directory to "catkin_ws".
+```
+cd catkin_ws
+```
+2. Build all packages.
+```
+catkin_make
+```
+3. Launch the Gazebo simulation that runs A*. 
+```
+roslaunch a_star a_star.launch
+```
 
 ***git link***
 https://github.com/sbadshah96/ENPM661_Project3_phase2.git
