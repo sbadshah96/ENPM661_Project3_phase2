@@ -16,15 +16,21 @@ The scripts includes following libraries:\
 
 **To install heapDict():**
 Run below command in the terminal:
--pip install HeapDict
+```
+pip install HeapDict
+```
 
 **To install sortedcollections():**
 Run below command in the terminal:
--pip install sortedcollections
+```
+pip install sortedcollections
+```
 
 **To install vidmaker():**
 Run below command in the terminal:
--pip install vidmaker
+```
+pip install vidmaker
+```
 
 To run the code, open any editor (preferably VSC) and run the script.
 
